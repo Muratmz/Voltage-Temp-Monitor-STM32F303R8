@@ -218,7 +218,7 @@ int main(void)
 			DataCollected.TEMP_ADC_Exteranl = ((-(int32_t)ExAdcData * REF_RESISTOR/ADS1220_RANGE)-RTD_VALUE)/(RTD_VALUE*TEMP_COEFFICIENT);
 			
 
-      sprintf((char *)UART_TxBuffer,"T_STM32,%4d, 1v1,%4d, 1v8_HDMI,%4d, 28V,%4d, 5V,%4d, 1v8,%4d, 1v5,%4d, 3v3,%4d, 1v2,%4d, VTT,%4d, Ex_T,%4.1f\n",
+      sprintf((char *)UART_TxBuffer,"T_STM32,%4d, 1v1,%4d, 1v8_HDMI,%4d, 28V,%4d, 5V,%4d, 1v8,%4d, 1v5,%4d, 3v3,%4d, 1v2,%4d, VTT,%4d, Ex_T,%4.2f\n",
 				                         DataCollected.TEMP_STM32_DegreeCelsius,DataCollected.VDD11_CORE_mV,DataCollected.VDD18_HDMI_mV,
 			                           DataCollected.VIN_28V_mV,DataCollected.VCC_5V_mV,DataCollected.VDD18_mV,DataCollected.VDD15_mV,
 			                           DataCollected.VDD33_mV,DataCollected.VDD12_SDI_mV,DataCollected.VTT_mV,DataCollected.TEMP_ADC_Exteranl);
@@ -726,6 +726,27 @@ void ExAdcReadData(uint32_t *data)
 {
 	uint8_t TxBuffer[] = {ADS1220_CMD_READ_DATA,0x00,0x00,0x00,0x00};
 	uint8_t RxBuffer[] = {0x00,0x00,0x00,0x00,0x00};
+	uint8_t TxBufferStart[]={ADS1220_CMD_START,0x00};
+	switch(HAL_SPI_TransmitReceive(&SpiHandle, (uint8_t*)TxBufferStart, (uint8_t *)RxBuffer, 2, 100))
+  {
+    case HAL_OK:
+      /* Communication is completed ___________________________________________ */
+      // *data= (int)(0xff000000|(RxBuffer[1]<<16)|(RxBuffer[2]<<8)|(RxBuffer[3]))*1650/8388608;
+		  //*data= 0xff000000|(RxBuffer[1]<<16)|(RxBuffer[2]<<8)|(RxBuffer[3]);
+      /* Turn LED3 on: Transfer in transmission/Reception process is correct */
+      //BSP_LED_On(LED3);
+      break;
+
+    case HAL_TIMEOUT:
+      /* An Error Occur ______________________________________________________ */
+    case HAL_ERROR:
+      /* Call Timeout Handler */
+      Error_Handler();
+      break;
+    default:
+      break;
+  }
+	
 	switch(HAL_SPI_TransmitReceive(&SpiHandle, (uint8_t*)TxBuffer, (uint8_t *)RxBuffer, 4, 100))
   {
     case HAL_OK:
