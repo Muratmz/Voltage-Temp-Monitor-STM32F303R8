@@ -1,6 +1,6 @@
 # Voltage-Temp-Monitor-STM32F303R8  
 this is an example of STM32F303R8 to monitor 10 channels of board voltage,  
-one channel of STM32 chip temperature ,and one channel of external ADC for RTD Temp capture.
+one channel of STM32 chip temperature ,and one channel of external ADC （ADS1220）for RTD Temp capture.
 all the voltages and temerature data are print by uart with ASCII  
 check the links below for  MCU datasheet and related resources   
 http://www.stmcu.org/document/list/index/category-466  
