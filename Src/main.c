@@ -215,7 +215,7 @@ int main(void)
 			DataCollected.VDD12_SDI_mV  = COMPUTATION_DIGITAL_12BITS_TO_VOLTAGE(aADCxConvertedData[9]);
 			
 			ExAdcReadData(&ExAdcData);
-			DataCollected.TEMP_ADC_Exteranl = ((-(int32_t)ExAdcData * REF_RESISTOR/ADS1220_RANGE)-RTD_VALUE)/(RTD_VALUE*TEMP_COEFFICIENT);
+			DataCollected.TEMP_ADC_Exteranl = ((-(int32_t)ExAdcData * (float)REF_RESISTOR/(float)ADS1220_RANGE)-RTD_VALUE)/(RTD_VALUE*TEMP_COEFFICIENT);
 			
 
       sprintf((char *)UART_TxBuffer,"T_STM32,%4d, 1v1,%4d, 1v8_HDMI,%4d, 28V,%4d, 5V,%4d, 1v8,%4d, 1v5,%4d, 3v3,%4d, 1v2,%4d, VTT,%4d, Ex_T,%4.2f\n",
